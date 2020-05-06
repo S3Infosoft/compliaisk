@@ -1,0 +1,13 @@
+section.pdf-toolbar button {
+    background-color: #fff;
+    border: 1px solid #555;
+    padding: 8px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  section.pdf-toolbar button:hover,
+  section.pdf-toolbar button:focus {
+    border: 1px solid #333;
+    background-color: #eee;
+  }

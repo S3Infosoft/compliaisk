@@ -11,7 +11,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row
+  Row,
 } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -28,40 +28,42 @@ class Register extends Component {
       email: "",
       password: "",
       password2: "",
-      errors: {}
+      errors: {},
+      userImage: "",
     };
   }
 
   componentDidMount() {
     // If logged in and user navigates to Register page, should redirect them to dashboard
-    if(this.props.auth.isAuthenticated){
-      this.props.history.push('/');
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/");
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({
-        errors: nextProps.errors
+        errors: nextProps.errors,
       });
     }
   }
 
-  
-
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     const newUser = {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
+      userImage: this.state.userImage,
     };
+
+    console.log(newUser);
 
     this.props.registerUser(newUser, this.props.history);
   };
@@ -92,7 +94,7 @@ class Register extends Component {
                         id="name"
                         type="text"
                         className={classnames("", {
-                          invalid: errors.name
+                          invalid: errors.name,
                         })}
                         placeholder="Username"
                         autoComplete="username"
@@ -110,7 +112,7 @@ class Register extends Component {
                         id="email"
                         type="text"
                         className={classnames("", {
-                          invalid: errors.email
+                          invalid: errors.email,
                         })}
                         placeholder="Email"
                         autoComplete="email"
@@ -130,7 +132,7 @@ class Register extends Component {
                         id="password"
                         type="password"
                         className={classnames("", {
-                          invalid: errors.password
+                          invalid: errors.password,
                         })}
                         placeholder="Password"
                         autoComplete="new-password"
@@ -150,33 +152,40 @@ class Register extends Component {
                         id="password2"
                         type="password"
                         className={classnames("", {
-                          invalid: errors.password2
+                          invalid: errors.password2,
                         })}
                         placeholder="Repeat password"
                         autoComplete="new-password"
                       />
                       <span className="red-text">{errors.password2}</span>
                     </InputGroup>
-                    {/* <InputGroup className="mb-4">
-                      <InputGroupAddon addonType="prepend">
+                    <InputGroup className="mb-4">
+                      {/* <InputGroupAddon addonType="prepend">
                         <InputGroupText>
                           <i className="icon-cloud-upload"></i>
                         </InputGroupText>
-                      </InputGroupAddon>
+                        <label
+                          htmlFor="userImage"
+                          style={{ paddingLeft: "10px"}}
+                        >
+                          Upload Your Profile pic
+                        </label>
+                      </InputGroupAddon> */}
+
                       <Input
                         onChange={this.onChange}
-                        value={this.state.password2}
-                        error={errors.password2}
-                        id="password2"
-                        type="password"
+                        value={this.state.userImage}
+                        error={errors.userImage}
+                        id="userImage"
+                        type="file"
                         className={classnames("", {
-                          invalid: errors.password2
+                          invalid: errors.userImage,
                         })}
-                        placeholder="Repeat password"
-                        autoComplete="new-password"
+                        placeholder="upload your image"
+                        // style={{visibility: "hidden"}}
                       />
-                      <span className="red-text">{errors.password2}</span>
-                    </InputGroup> */}
+                      <span className="red-text">{errors.userImage}</span>
+                    </InputGroup>
                     <Button color="success" block>
                       Create Account
                     </Button>
@@ -204,12 +213,12 @@ class Register extends Component {
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
-})
+  errors: state.errors,
+});
 
-export default connect( mapStateToProps, { registerUser }) (withRouter(Register));
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));

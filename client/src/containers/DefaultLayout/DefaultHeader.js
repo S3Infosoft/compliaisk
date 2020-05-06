@@ -7,20 +7,21 @@ import {
   DropdownMenu,
   DropdownToggle,
   Nav,
-  NavItem
+  NavItem,
 } from "reactstrap";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
 import {
   AppAsideToggler,
   AppNavbarBrand,
-  AppSidebarToggler
+  AppSidebarToggler,
 } from "@coreui/react";
 import logo from "../../assets/img/brand/logo_sm.png";
 import sygnet from "../../assets/img/brand/logo_sm.png";
 
 const propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 const defaultProps = {};
@@ -57,7 +58,7 @@ class DefaultHeader extends Component {
           </NavItem>
           <NavItem className="px-3">
             <NavLink to="/fileupload" className="nav-link">
-            FileUpload
+              FileUpload
             </NavLink>
           </NavItem>
         </Nav>
@@ -74,7 +75,7 @@ class DefaultHeader extends Component {
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
               <img
-                src={"../../assets/img/avatars/9.jpg"}
+                src={`http://localhost:5000/${this.props.currentUser.image}`}
                 className="img-avatar"
                 alt="admin@bootstrapmaster.com"
               />
@@ -100,7 +101,7 @@ class DefaultHeader extends Component {
               <DropdownItem><i className="fa fa-file"></i> Projects<Badge color="primary">42</Badge></DropdownItem>
               <DropdownItem divider />
               <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem> */}
-              <DropdownItem onClick={e => this.props.onLogout(e)}>
+              <DropdownItem onClick={(e) => this.props.onLogout(e)}>
                 <i className="fa fa-lock"></i> Logout
               </DropdownItem>
             </DropdownMenu>
@@ -116,4 +117,8 @@ class DefaultHeader extends Component {
 DefaultHeader.propTypes = propTypes;
 DefaultHeader.defaultProps = defaultProps;
 
-export default DefaultHeader;
+const mapStateToProps = (state) => ({
+  currentUser: state.auth.user,
+});
+
+export default connect(mapStateToProps)(DefaultHeader);

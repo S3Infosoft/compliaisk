@@ -30,6 +30,7 @@
     "passport-jwt": "^4.0.0",
     "puppeteer": "^3.0.1",
     "request-promise-native": "^1.0.8",
+    "uuid": "^8.0.0",
     "validator": "^13.0.0"
   },
   "devDependencies": {

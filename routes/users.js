@@ -3,6 +3,28 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString().replace(/[\/\\:]/g, "_") + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+  
+}
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // Load input validation
 const validateRegisterInput = require("../validation/register");
@@ -27,7 +49,7 @@ router.get("/userslist", async (req, res) => {
 // @route POST api/users/register
 // @desc Register user
 // @access Public
-router.post("/register", (req, res) => {
+router.post("/register", upload.single("userImage"), (req, res, next) => {
   // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -44,6 +66,7 @@ router.post("/register", (req, res) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
+        userImage: req.file.path
       });
 
       // Hash password before saving in database
@@ -89,6 +112,8 @@ router.post("/login", (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
+          email: user.email,
+          image: user.userImage
         };
         // Sign token
         jwt.sign(

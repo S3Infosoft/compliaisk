@@ -1,30 +1,38 @@
 const express = require("express");
 const router = express.Router();
-var multer = require('multer');
+const mongoose = require("mongoose");
+const multer = require("multer");
+const keys = require("../config/keys");
 
-var storage = multer.diskStorage({
-    destination: function(req, file, cb){
-        cb(null, 'uploads')
-    },
-    filename: function(req, file, cb){
-        cb(null, Date.now() + '- ' + file.originalname)
-    }
-})
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      new Date().toISOString().replace(/[\/\\:]/g, "_") + file.originalname
+    );
+  },
+});
 
-var upload = multer({ storage: storage }).single('file')
+const upload = multer({ storage: storage });
 
+// Load File model
+const File = require("../models/File_model");
 
-router.post('/upload', function(req, res){
-    upload(req, res, function(err) {
-        if(err instanceof multer.MulterError){
-            return res.status(500).json(err)
-        } else if (err) {
-            return res.status(500).json(err)
-        }
+// @route POST /api/fileupload/upload
+// @desc Register user
+// @access Public
+router.post("/upload", upload.single("fileUpload"), (req, res, next) => {
+  const newFile = new File({
+    fileUpload: req.file.path,
+  });
 
-        return res.status(200).send(req.file)
-    })
-})
-
+  newFile
+    .save()
+    .then((file) => res.json(file))
+    .catch((err) => console.log(err));
+});
 
 module.exports = router;

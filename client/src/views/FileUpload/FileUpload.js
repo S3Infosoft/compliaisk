@@ -16,21 +16,28 @@ export default class FileUpload extends Component {
 
     let formData = new FormData();
 
-    formData.append("image", file);
+    formData.append("fileUpload", file);
 
     axios
       .post("http://localhost:5000/api/fileupload/upload", formData, {})
       .then((res) => {
-        console.log(res);
-      }).catch(err => {
-        console.log(err)
+        alert("File Uploaded!");
       })
+      .catch((err) => {
+        alert(err);
+      });
+
+    document.getElementById("uploadfile").value = null;
   };
 
   render() {
     return (
       <div>
-        <input type="file" onChange={this.fileSelectedHandler} />
+        <input
+          type="file"
+          onChange={this.fileSelectedHandler}
+          id="uploadfile"
+        />
         <button onClick={this.fileUploadHandler}>Upload</button>
       </div>
     );

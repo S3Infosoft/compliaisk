@@ -19,6 +19,12 @@ import { connect } from "react-redux";
 import { registerUser } from "../../../actions/authActions";
 import classnames from "classnames";
 
+
+const spanStyles = {
+  color: "#FF0000"
+};
+
+
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +35,7 @@ class Register extends Component {
       password: "",
       password2: "",
       errors: {},
+      error: {},
       userImage: "",
     };
   }
@@ -52,24 +59,48 @@ class Register extends Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
+  onImageChange = (e) => {
+
+    
+
+    this.setState({ userImage: e.target.files[0] });
+
+
+  };
+
+ 
+
   onSubmit = (e) => {
     e.preventDefault();
 
-    const newUser = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      password2: this.state.password2,
-      userImage: this.state.userImage,
-    };
+    const formData = new FormData();
+    formData.append("email", this.state.email);
+    formData.append("name", this.state.name);
+    formData.append("password", this.state.password);
+    formData.append("password2", this.state.password2);
+    formData.append("image", this.state.userImage);
 
-    console.log(newUser);
+    // const newUser = {
+    //   name: this.state.name,
+    //   email: this.state.email,
+    //   password: this.state.password,
+    //   password2: this.state.password2,
+    //   userImage: this.state.userImage,
+    // };
 
-    this.props.registerUser(newUser, this.props.history);
+    // console.log(newUser);
+
+    this.props.registerUser(formData, this.props.history);
+
+    if(!this.state.userImage){
+      this.setState({
+        error : {userImage: "Upload your pic"}
+      })
+    }
   };
 
   render() {
-    const { errors } = this.state;
+    const { errors, error } = this.state;
 
     return (
       <div className="app flex-row align-items-center">
@@ -78,7 +109,7 @@ class Register extends Component {
             <Col md="9" lg="7" xl="6">
               <Card className="mx-4">
                 <CardBody className="p-4">
-                  <Form onSubmit={this.onSubmit}>
+                  <Form onSubmit={this.onSubmit} >
                     <h1>Register</h1>
                     <p className="text-muted">Create your account</p>
                     <InputGroup className="mb-3">
@@ -99,7 +130,7 @@ class Register extends Component {
                         placeholder="Username"
                         autoComplete="username"
                       />
-                      <span className="red-text">{errors.name}</span>
+                      <span className="red-text" style={spanStyles}>{errors.name}</span>
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -117,7 +148,7 @@ class Register extends Component {
                         placeholder="Email"
                         autoComplete="email"
                       />
-                      <span className="red-text">{errors.email}</span>
+                      <span className="red-text" style={spanStyles}>{errors.email}</span>
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -137,7 +168,7 @@ class Register extends Component {
                         placeholder="Password"
                         autoComplete="new-password"
                       />
-                      <span className="red-text">{errors.password}</span>
+                      <span className="red-text" style={spanStyles}>{errors.password}</span>
                     </InputGroup>
                     <InputGroup className="mb-4">
                       <InputGroupAddon addonType="prepend">
@@ -157,7 +188,7 @@ class Register extends Component {
                         placeholder="Repeat password"
                         autoComplete="new-password"
                       />
-                      <span className="red-text">{errors.password2}</span>
+                      <span className="red-text"  style={spanStyles}>{errors.password2}</span>
                     </InputGroup>
                     <InputGroup className="mb-4">
                       {/* <InputGroupAddon addonType="prepend">
@@ -171,11 +202,11 @@ class Register extends Component {
                           Upload Your Profile pic
                         </label>
                       </InputGroupAddon> */}
-
+                      <span>
                       <Input
-                        onChange={this.onChange}
-                        value={this.state.userImage}
-                        error={errors.userImage}
+                        onChange={this.onImageChange}
+                        // value={this.state.userImage}
+                        error={error.userImage}
                         id="userImage"
                         type="file"
                         className={classnames("", {
@@ -184,7 +215,8 @@ class Register extends Component {
                         placeholder="upload your image"
                         // style={{visibility: "hidden"}}
                       />
-                      <span className="red-text">{errors.userImage}</span>
+                      </span>
+                      <span className="red-text" style={spanStyles}>{error.userImage}</span>
                     </InputGroup>
                     <Button color="success" block>
                       Create Account

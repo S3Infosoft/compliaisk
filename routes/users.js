@@ -10,19 +10,21 @@ const storage = multer.diskStorage({
     cb(null, "./uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, new Date().toISOString().replace(/[\/\\:]/g, "_") + file.originalname);
+    cb(
+      null,
+      new Date().toISOString().replace(/[\/\\:]/g, "_") + file.originalname
+    );
   },
 });
 
 const fileFilter = (req, file, cb) => {
   // reject a file
-  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
     cb(null, true);
   } else {
     cb(null, false);
   }
-  
-}
+};
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
@@ -49,7 +51,7 @@ router.get("/userslist", async (req, res) => {
 // @route POST api/users/register
 // @desc Register user
 // @access Public
-router.post("/register", upload.single("userImage"), (req, res, next) => {
+router.post("/register", upload.single("image"), (req, res, next) => {
   // Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -66,7 +68,7 @@ router.post("/register", upload.single("userImage"), (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        userImage: req.file.path
+        userImage: req.file.path,
       });
 
       // Hash password before saving in database
@@ -113,7 +115,7 @@ router.post("/login", (req, res) => {
           id: user.id,
           name: user.name,
           email: user.email,
-          image: user.userImage
+          image: user.userImage,
         };
         // Sign token
         jwt.sign(

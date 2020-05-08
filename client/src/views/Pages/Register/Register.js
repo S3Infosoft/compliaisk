@@ -13,17 +13,17 @@ import {
   InputGroupText,
   Row,
 } from "reactstrap";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
+
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { registerUser } from "../../../actions/authActions";
 import classnames from "classnames";
-
+import isEmpty from "is-empty";
 
 const spanStyles = {
-  color: "#FF0000"
+  color: "#FF0000",
 };
-
 
 class Register extends Component {
   constructor(props) {
@@ -60,15 +60,12 @@ class Register extends Component {
   };
 
   onImageChange = (e) => {
-
-    
-
     this.setState({ userImage: e.target.files[0] });
-
-
   };
 
- 
+  onScreenChange = () => {
+    this.props.history.push("/login");
+  };
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -92,11 +89,23 @@ class Register extends Component {
 
     this.props.registerUser(formData, this.props.history);
 
-    if(!this.state.userImage){
+    if (!this.state.userImage) {
       this.setState({
-        error : {userImage: "Upload your pic"}
-      })
+        error: { userImage: "Upload your pic" },
+      });
     }
+
+    // setTimeout(function () {
+    //   if (
+    //     Object.entries(this.state.error).length > 0 ||
+    //     Object.entries(this.state.errors).length > 0
+    //   ) {
+    //     this.setState({
+    //       error: {},
+    //       errors: {},
+    //     });
+    //   }
+    // }, 30000);
   };
 
   render() {
@@ -109,7 +118,7 @@ class Register extends Component {
             <Col md="9" lg="7" xl="6">
               <Card className="mx-4">
                 <CardBody className="p-4">
-                  <Form onSubmit={this.onSubmit} >
+                  <Form onSubmit={this.onSubmit}>
                     <h1>Register</h1>
                     <p className="text-muted">Create your account</p>
                     <InputGroup className="mb-3">
@@ -130,7 +139,9 @@ class Register extends Component {
                         placeholder="Username"
                         autoComplete="username"
                       />
-                      <span className="red-text" style={spanStyles}>{errors.name}</span>
+                      <span className="red-text" style={spanStyles}>
+                        {errors.name}
+                      </span>
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -148,7 +159,9 @@ class Register extends Component {
                         placeholder="Email"
                         autoComplete="email"
                       />
-                      <span className="red-text" style={spanStyles}>{errors.email}</span>
+                      <span className="red-text" style={spanStyles}>
+                        {errors.email}
+                      </span>
                     </InputGroup>
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -168,7 +181,9 @@ class Register extends Component {
                         placeholder="Password"
                         autoComplete="new-password"
                       />
-                      <span className="red-text" style={spanStyles}>{errors.password}</span>
+                      <span className="red-text" style={spanStyles}>
+                        {errors.password}
+                      </span>
                     </InputGroup>
                     <InputGroup className="mb-4">
                       <InputGroupAddon addonType="prepend">
@@ -188,7 +203,9 @@ class Register extends Component {
                         placeholder="Repeat password"
                         autoComplete="new-password"
                       />
-                      <span className="red-text"  style={spanStyles}>{errors.password2}</span>
+                      <span className="red-text" style={spanStyles}>
+                        {errors.password2}
+                      </span>
                     </InputGroup>
                     <InputGroup className="mb-4">
                       {/* <InputGroupAddon addonType="prepend">
@@ -203,26 +220,41 @@ class Register extends Component {
                         </label>
                       </InputGroupAddon> */}
                       <span>
-                      <Input
-                        onChange={this.onImageChange}
-                        // value={this.state.userImage}
-                        error={error.userImage}
-                        id="userImage"
-                        type="file"
-                        className={classnames("", {
-                          invalid: errors.userImage,
-                        })}
-                        placeholder="upload your image"
-                        // style={{visibility: "hidden"}}
-                      />
+                        <Input
+                          onChange={this.onImageChange}
+                          // value={this.state.userImage}
+                          error={error.userImage}
+                          id="userImage"
+                          type="file"
+                          className={classnames("", {
+                            invalid: errors.userImage,
+                          })}
+                          placeholder="upload your image"
+                          // style={{visibility: "hidden"}}
+                        />
                       </span>
-                      <span className="red-text" style={spanStyles}>{error.userImage}</span>
+                      <span className="red-text" style={spanStyles}>
+                        {error.userImage}
+                      </span>
                     </InputGroup>
                     <Button color="success" block>
                       Create Account
                     </Button>
                   </Form>
                 </CardBody>
+                <CardFooter className="p-4">
+                  <Row>
+                    <Col xs="12">
+                      <Button
+                        className="btn-facebook mb-1"
+                        block
+                        onClick={this.onScreenChange}
+                      >
+                        <span>Login Page</span>
+                      </Button>
+                    </Col>
+                  </Row>
+                </CardFooter>
                 {/* <CardFooter className="p-4">
                   <Row>
                     <Col xs="12" sm="6">

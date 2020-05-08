@@ -6,12 +6,6 @@ const fs = require("fs");
 const path = require("path");
 const nodemailer = require("nodemailer");
 
-let curremail;
-
-function getcurremail(usr) {
-  curremail = usr;
-}
-
 router.post("/receive", function (req, res, next) {
   var form = new formidable.IncomingForm();
 
@@ -21,9 +15,15 @@ router.post("/receive", function (req, res, next) {
     file.path = __dirname + "/uploads/" + file.name;
   });
 
+  let userEmail;
+
+  form.on("field", function (field, value) {
+    
+    userEmail = value;
+  });
+
   form.on("file", function (name, file) {
-    console.log("Uploaded " + file.name);
-    console.log("user email", curremail);
+
     // Step 1
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -36,7 +36,7 @@ router.post("/receive", function (req, res, next) {
     // Step 2
     let mailOptions = {
       from: "kappkumar@gmail.com",
-      to: curremail,
+      to: userEmail,
       subject: "Call Log Report",
       text: "You'r requested report",
       attachments: [
@@ -61,4 +61,4 @@ router.post("/receive", function (req, res, next) {
   );
 });
 
-module.exports = { router: router, getcurremail: getcurremail };
+module.exports = { router: router };

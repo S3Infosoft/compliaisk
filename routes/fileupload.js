@@ -29,6 +29,8 @@ router.post("/upload", upload.single("fileUpload"), (req, res, next) => {
     fileUpload: req.file.path,
   });
 
+  console.log(req);
+  
   newFile
     .save()
     .then((file) => res.json(file))

@@ -31,7 +31,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
-const uploads = require("./uploads_router");
+
 
 // Load User model
 const User = require("../models/User");
@@ -98,7 +98,7 @@ router.post("/login", (req, res) => {
   }
   const email = req.body.email;
   const password = req.body.password;
-  uploads.getcurremail(email);
+  
 
   // Find user by email
   User.findOne({ email }).then((user) => {

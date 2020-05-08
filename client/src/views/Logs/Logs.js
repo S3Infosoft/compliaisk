@@ -58,6 +58,8 @@ class Logs extends Component {
       fromDate: "",
       toDate: "",
     };
+
+    this.printDocument = this.printDocument.bind(this);
   }
 
   componentDidMount() {
@@ -164,33 +166,8 @@ class Logs extends Component {
     return activeSelection;
   };
 
-  // createPdf = (html) => Doc.createPdf(html);
-
-  // generatePDF = () => {
-  //   var doc = new jsPDF("p", "pt");
-  //   doc.addHTML(document.getElementById("pdfdata"), function () {
-  //     doc.save("demo.pdf");
-  //   });
-
-  //   doc.text(20, 20, 'This is the first title.')
-
-  //   doc.setFont('helvetica')
-  //   doc.setFontType('normal')
-  //   doc.text(20, 60, 'This is the second title.')
-
-  //   doc.setFont('helvetica')
-  //   doc.setFontType('normal')
-  //   doc.text(20, 100, 'This is the thrid title.')
-
-  //   doc.save('demo.pdf')
-
-  //   const string = renderToString(<Logs />);
-  // const pdf = new jsPDF();
-  // pdf.fromHTML(string);
-  // pdf.save("pdf");
-  // };
-
-  printDocument() {
+  printDocument = () => {
+    let email = this.props.currentUser.email;
     const input = document.getElementById("logsReport");
     html2canvas(input).then(function (canvas) {
       var img = canvas.toDataURL("image/png");
@@ -202,20 +179,23 @@ class Logs extends Component {
 
       var formData = new FormData();
       formData.append("pdf", data, "Report.pdf");
+      formData.append("email", email);
       var request = new XMLHttpRequest();
       request.open("POST", "http://localhost:5000/receive"); // Change to your server
-      request.onload = function(){ alert (request.responseText); } 
-      request.onerror = function(){ alert (request.responseText); }
+      request.onload = function () {
+        alert(request.responseText);
+      };
+      request.onerror = function () {
+        alert(request.responseText);
+      };
       request.send(formData);
-      
     });
-  }
+  };
 
   render() {
     let data = this.props.auth;
 
     let dataArry = this.getData(data);
-    
 
     return (
       <div className="animated fadeIn">
@@ -239,7 +219,7 @@ class Logs extends Component {
             >
               Generate Pdf
             </Button>
-            <Card id="logsReport">
+            <Card>
               <CardHeader>
                 <i className="fa fa-align-justify"></i> CallLogs{" "}
                 <span style={{ paddingLeft: "50px" }}>
@@ -273,7 +253,7 @@ class Logs extends Component {
                 {/* <small className="text-muted">example</small> */}
               </CardHeader>
               <CardBody>
-                <Table responsive hover>
+                <Table responsive hover id="logsReport">
                   <thead>
                     <tr>
                       <th scope="col">S.No</th>
@@ -309,6 +289,7 @@ Logs.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth.logs,
+  currentUser: state.auth.user,
 });
 
 export default connect(mapStateToProps, { fetchLogs })(Logs);

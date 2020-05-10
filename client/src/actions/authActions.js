@@ -7,6 +7,7 @@ import {
   USER_LOADING,
   GET_USERS,
   GET_LOGS,
+  GET_FILES
 } from "./types";
 
 // Register User
@@ -93,3 +94,15 @@ export const fetchLogs = () => (dispatch) => {
       });
     });
 };
+
+// Get files
+export const fetchFiles = () => (dispatch) => {
+  fetch('http://localhost:5000/api/fileupload/filelist')
+    .then((res) => res.json())
+    .then((data) => {
+      dispatch({
+        type: GET_FILES,
+        payload: data
+      })
+    })
+}

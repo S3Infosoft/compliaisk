@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const FileSchema = new Schema({
-  fileUpload: { type: String, required: true },
+  name: { type: String, required: true },
+  size: { type: Number, required: true },
+  filePath: { type: String, required: true },
   uploadedDate: {
     type: Date,
     default: Date.now,

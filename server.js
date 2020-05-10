@@ -22,7 +22,7 @@ const dailyDataLoad = require("./jobs/dailyDataLoad");
 const app = express();
 
 //Task scheduler
-cron.schedule("20 */01 * * * ", function () {
+cron.schedule("0 1 * * * ", function () {
   dailyDataLoad();
 });
 

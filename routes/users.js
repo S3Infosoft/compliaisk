@@ -86,6 +86,8 @@ router.post("/register", upload.single("image"), (req, res, next) => {
   });
 });
 
+
+
 // @route POST api/users/login
 // @desc Login user and return JWT token
 // @access Public

@@ -24,6 +24,8 @@ import jsPDF from "jspdf";
 import { renderToString } from "react-dom/server";
 import html2canvas from "html2canvas";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "./Logs.css";
 
@@ -183,10 +185,10 @@ class Logs extends Component {
       var request = new XMLHttpRequest();
       request.open("POST", "http://localhost:5000/receive"); // Change to your server
       request.onload = function () {
-        alert(request.responseText);
+        toast(request.responseText);
       };
       request.onerror = function () {
-        alert(request.responseText);
+        toast(request.responseText);
       };
       request.send(formData);
     });

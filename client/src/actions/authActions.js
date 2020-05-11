@@ -7,8 +7,10 @@ import {
   USER_LOADING,
   GET_USERS,
   GET_LOGS,
-  GET_FILES
+  GET_FILES,
 } from "./types";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
@@ -22,6 +24,28 @@ export const registerUser = (userData, history) => (dispatch) => {
       })
     );
 };
+
+// User password reset
+export const userPasswordReset = (userData, history) => (dispatch) => {
+  axios
+    .put("/api/users/passwordreset", userData)
+    .then((res) => {
+      if (res.data == "Password Updated") {
+        history.push("/login"); // re-direct to login on successful passsword reset
+        alert(res.data);
+      } else {
+        alert(res.data);
+      }
+    })
+    .catch((err) => {
+      console.log("Errors: ", err);
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
 // Login - get user token
 export const loginUser = (userData) => (dispatch) => {
   axios
@@ -46,9 +70,9 @@ export const loginUser = (userData) => (dispatch) => {
       })
     );
 };
+
 // Set logged in user
 export const setCurrentUser = (decoded) => {
-  
   return {
     type: SET_CURRENT_USER,
     payload: decoded,
@@ -97,12 +121,12 @@ export const fetchLogs = () => (dispatch) => {
 
 // Get files
 export const fetchFiles = () => (dispatch) => {
-  fetch('http://localhost:5000/api/fileupload/filelist')
+  fetch("http://localhost:5000/api/fileupload/filelist")
     .then((res) => res.json())
     .then((data) => {
       dispatch({
         type: GET_FILES,
-        payload: data
-      })
-    })
-}
+        payload: data,
+      });
+    });
+};

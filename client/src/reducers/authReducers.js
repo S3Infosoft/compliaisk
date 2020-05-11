@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_LOGS, GET_FILES } from "../actions/types";
+import { SET_CURRENT_USER, USER_LOADING, GET_USERS, GET_LOGS, GET_FILES, GET_ERRORS,  } from "../actions/types";
 
 const isEmpty = require("is-empty");
 
@@ -8,6 +8,8 @@ const initialState = {
   users: [],
   logs: [],
   files: [],
+  errors: {},
+  
   loading: false
 };
 
@@ -39,6 +41,12 @@ export default function(state = initialState, action) {
         ...state,
         files: action.payload
       }
+    case GET_ERRORS:
+      return {
+        ...state,
+        errors: action.payload
+      }
+    
     default:
       return state;
   }

@@ -9,10 +9,10 @@ import usersData from "./UsersData";
 
 function UserRow(props) {
   const user = props.user;
+  const index = props.index;
   const userLink = `/users/${user.id}`;
 
   const getBadge = (status) => {
-    
     return status === "Active"
       ? "success"
       : status === "Inactive"
@@ -26,11 +26,9 @@ function UserRow(props) {
 
   return (
     <tr key={user.id}>
-      <th scope="row">
-        <Link to={userLink}>{user._id}</Link>
-      </th>
+      <th scope="row">{index + 1}</th>
       <td>
-        <Link to={userLink}>{user.name}</Link>
+        {user.name}
       </td>
       <td>{user.email}</td>
       {/* <td>{user.registered}</td>
@@ -44,12 +42,10 @@ class Users extends Component {
   componentWillMount() {
     this.props.fetchUsers();
   }
-  
 
   render() {
     const userList = usersData.filter((user) => user.id < 10);
-    
-    
+
     return (
       <div className="animated fadeIn">
         <Row>
@@ -73,7 +69,7 @@ class Users extends Component {
                   </thead>
                   <tbody>
                     {this.props.auth.map((user, index) => (
-                      <UserRow key={index} user={user} />
+                      <UserRow key={index} user={user} index={index} />
                     ))}
                   </tbody>
                 </Table>
@@ -89,12 +85,12 @@ class Users extends Component {
 Users.propTypes = {
   fetchUsers: PropTypes.func.isRequired,
   auth: PropTypes.array.isRequired,
-  currentUser: PropTypes.object.isRequired
+  currentUser: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth.users,
-  currentUser: state.auth.user
+  currentUser: state.auth.user,
 });
 
 export default connect(mapStateToProps, { fetchUsers })(Users);

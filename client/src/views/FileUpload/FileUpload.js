@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import axios from "axios";
 import { Progress } from "reactstrap";
+import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -29,7 +30,7 @@ function FileRow(props) {
     <tr key={file._id}>
       <th scope="row">{index + 1}</th>
       <td>{file.name}</td>
-      <td>{file.uploadedDate}</td>
+      <td>{moment(file.uploadedDate).format("MMMM D YYYY HH:mm")}</td>
       <td>{file.size}</td>
       <td>
         <a href={file.filePath}>{file.filePath}</a>
@@ -71,15 +72,12 @@ class FileUpload extends Component {
       })
       .then((res) => {
         toast.success("upload success");
-        
       })
       .catch((err) => {
         toast.error("upload fail");
       });
 
     document.getElementById("uploadfile").value = null;
-    
-    
   };
 
   render() {

@@ -39,6 +39,7 @@ const Logs = React.lazy(() => import('./views/Logs/Logs'));
 const Log = React.lazy(() => import('./views/Logs/Log'));
 const FileUpload = React.lazy(() => import('./views/FileUpload/FileUpload'));
 
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -85,6 +86,7 @@ const routes = [
   { path: '/logs', exact: true,  name: 'Logs', component: Logs },
   { path: '/logs/:id', exact: true, name: 'Log Details', component: Log },
   { path: '/fileupload', exact: true,  name: 'FileUpload', component: FileUpload},
+  
 ];
 
 export default routes;

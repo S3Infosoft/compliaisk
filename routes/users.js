@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const multer = require("multer");
+const Validator = require("validator");
+const isEmpty = require("is-empty");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -31,7 +33,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
-
+const validateResetInput = require("../validation/reset");
 
 // Load User model
 const User = require("../models/User");
@@ -86,8 +88,6 @@ router.post("/register", upload.single("image"), (req, res, next) => {
   });
 });
 
-
-
 // @route POST api/users/login
 // @desc Login user and return JWT token
 // @access Public
@@ -100,7 +100,6 @@ router.post("/login", (req, res) => {
   }
   const email = req.body.email;
   const password = req.body.password;
-  
 
   // Find user by email
   User.findOne({ email }).then((user) => {
@@ -138,6 +137,62 @@ router.post("/login", (req, res) => {
           .status(400)
           .json({ passwordincorrect: "Password incorrect" });
       }
+    });
+  });
+});
+
+// @route POST api/users/passwordreset
+// @desc Reset your password
+// @access Public
+router.put("/passwordreset", (req, res, next) => {
+  const { errors, isValid } = validateResetInput(req.body);
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  let email = req.body.email;
+  let password = req.body.password;
+
+  // console.log(email, password);
+
+  // email = !isEmpty(email) ? email : "";
+  // password = !isEmpty(password) ? password : "";
+
+  // // Email checks
+  // if (Validator.isEmpty(email)) {
+  //   return res.status(400).json("Email field is required");
+  // } else if (!Validator.isEmail(email)) {
+  //   return res.status(400).json("Email is invalid");
+  // }
+
+  // // Password checks
+  // if (Validator.isEmpty(password)) {
+  //   return res.status(400).json("Password field is required");
+  // }
+  // if (!Validator.isLength(password, { min: 6, max: 30 })) {
+  //   return res.status(400).json("Password must be at least 6 characters");
+  // }
+
+  // Hash password before saving in database
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(password, salt, (err, hash) => {
+      if (err) throw err;
+
+      User.findOneAndUpdate(
+        { email },
+        { $set: { password: hash } },
+        { new: false },
+        function (err, doc) {
+          if (doc === null) {
+            res.send("Correct Email is required!");
+          } else {
+            res.send("Password Updated");
+          }
+        }
+      );
+      
     });
   });
 });

@@ -12,7 +12,7 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-  Row
+  Row,
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -26,7 +26,7 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {}
+      errors: {},
     };
   }
 
@@ -44,21 +44,21 @@ class Login extends Component {
 
     if (nextProps.errors) {
       this.setState({
-        errors: nextProps.errors
+        errors: nextProps.errors,
       });
     }
   }
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     const userData = {
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
     };
 
     this.props.loginUser(userData); // // since we handle the redirect within our component, we don't need to pass in this.props.history as a parameter
@@ -91,7 +91,7 @@ class Login extends Component {
                           id="email"
                           type="text"
                           className={classnames("", {
-                            invalid: errors.email || errors.emailnotfound
+                            invalid: errors.email || errors.emailnotfound,
                           })}
                           placeholder="Username"
                           autoComplete="username"
@@ -114,15 +114,16 @@ class Login extends Component {
                           id="password"
                           type="password"
                           className={classnames("", {
-                            invalid: errors.password || errors.passwordincorrect
+                            invalid:
+                              errors.password || errors.passwordincorrect,
                           })}
                           placeholder="Password"
                           autoComplete="current-password"
                         />
-                         <span className="red-text">
-                  {errors.password}
-                  {errors.passwordincorrect}
-                </span>
+                        <span className="red-text">
+                          {errors.password}
+                          {errors.passwordincorrect}
+                        </span>
                       </InputGroup>
                       <Row>
                         <Col xs="6">
@@ -130,13 +131,17 @@ class Login extends Component {
                             Login
                           </Button>
                         </Col>
-                        <Col xs="6" className="text-right">
+                      </Row>
+                    </Form>
+                    <Row>
+                      <Col xs="6" >
+                        <Link to="/passwordreset">
                           <Button color="link" className="px-0">
                             Forgot password?
                           </Button>
-                        </Col>
-                      </Row>
-                    </Form>
+                        </Link>
+                      </Col>
+                    </Row>
                   </CardBody>
                 </Card>
                 <Card
@@ -176,14 +181,12 @@ class Login extends Component {
 Login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
 });
 
-export default connect(
-  mapStateToProps, { loginUser}
-) (Login );
+export default connect(mapStateToProps, { loginUser })(Login);
